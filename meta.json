@@ -1,8 +1,8 @@
 {
   "version_format": 1,
-  "exporte_le": "2026-10-29T15:35:45Z",
-  "releve_cours": "2026-10-28T21:24:48Z",
-  "derniere_seance": "2026-10-28",
+  "exporte_le": "2026-10-29T22:10:05Z",
+  "releve_cours": "2026-10-29T21:29:42Z",
+  "derniere_seance": "2026-10-29",
   "derniere_seance_close": true,
   "taux_irvm_pct": {
     "particulier": 12.0,
@@ -20,158 +20,158 @@
   "actions": {
     "ABJC.ci": {
       "premiere_seance": "2008-01-04",
-      "derniere_seance": "2026-10-28",
-      "seances": 3684
+      "derniere_seance": "2026-10-29",
+      "seances": 3685
     },
     "BBGC.ci": {
       "premiere_seance": "2026-09-23",
-      "derniere_seance": "2026-10-28",
-      "seances": 26
+      "derniere_seance": "2026-10-29",
+      "seances": 27
     },
     "BICB.bj": {
       "premiere_seance": "2025-04-28",
-      "derniere_seance": "2026-10-28",
-      "seances": 391
+      "derniere_seance": "2026-10-29",
+      "seances": 392
     },
     "BICC.ci": {
       "premiere_seance": "2008-01-03",
-      "derniere_seance": "2026-10-28",
-      "seances": 3545
+      "derniere_seance": "2026-10-29",
+      "seances": 3546
     },
     "BNBC.ci": {
       "premiere_seance": "2008-01-07",
-      "derniere_seance": "2026-10-28",
-      "seances": 3171
+      "derniere_seance": "2026-10-29",
+      "seances": 3172
     },
     "BOAB.bj": {
       "premiere_seance": "2008-01-16",
-      "derniere_seance": "2026-10-28",
-      "seances": 4184
+      "derniere_seance": "2026-10-29",
+      "seances": 4185
     },
     "BOABF.bf": {
       "premiere_seance": "2011-01-03",
-      "derniere_seance": "2026-10-28",
-      "seances": 3572
+      "derniere_seance": "2026-10-29",
+      "seances": 3573
     },
     "BOAC.ci": {
       "premiere_seance": "2010-04-12",
-      "derniere_seance": "2026-10-28",
-      "seances": 3666
+      "derniere_seance": "2026-10-29",
+      "seances": 3667
     },
     "BOAM.ml": {
       "premiere_seance": "2016-05-31",
-      "derniere_seance": "2026-10-28",
-      "seances": 2653
+      "derniere_seance": "2026-10-29",
+      "seances": 2654
     },
     "BOAN.ne": {
       "premiere_seance": "2008-01-02",
-      "derniere_seance": "2026-10-28",
-      "seances": 4053
+      "derniere_seance": "2026-10-29",
+      "seances": 4054
     },
     "BOAS.sn": {
       "premiere_seance": "2014-12-10",
-      "derniere_seance": "2026-10-28",
-      "seances": 3043
+      "derniere_seance": "2026-10-29",
+      "seances": 3044
     },
     "CABC.ci": {
       "premiere_seance": "2008-02-12",
-      "derniere_seance": "2026-10-28",
-      "seances": 3260
+      "derniere_seance": "2026-10-29",
+      "seances": 3261
     },
     "CBIBF.bf": {
       "premiere_seance": "2016-12-23",
-      "derniere_seance": "2026-10-28",
-      "seances": 2413
+      "derniere_seance": "2026-10-29",
+      "seances": 2414
     },
     "CFAC.ci": {
       "premiere_seance": "2008-01-02",
-      "derniere_seance": "2026-10-28",
-      "seances": 3255
+      "derniere_seance": "2026-10-29",
+      "seances": 3256
     },
     "CIEC.ci": {
       "premiere_seance": "2008-01-02",
-      "derniere_seance": "2026-10-28",
-      "seances": 4386
+      "derniere_seance": "2026-10-29",
+      "seances": 4387
     },
     "ECOC.ci": {
       "premiere_seance": "2017-12-12",
-      "derniere_seance": "2026-10-28",
-      "seances": 2280
+      "derniere_seance": "2026-10-29",
+      "seances": 2281
     },
     "ETIT.tg": {
       "premiere_seance": "2014-07-11",
-      "derniere_seance": "2026-10-28",
-      "seances": 3077
+      "derniere_seance": "2026-10-29",
+      "seances": 3078
     },
     "FTSC.ci": {
       "premiere_seance": "2008-01-07",
-      "derniere_seance": "2026-10-28",
-      "seances": 4254
+      "derniere_seance": "2026-10-29",
+      "seances": 4255
     },
     "LNBB.bj": {
       "premiere_seance": "2024-12-13",
-      "derniere_seance": "2026-10-28",
-      "seances": 486
+      "derniere_seance": "2026-10-29",
+      "seances": 487
     },
     "NEIC.ci": {
       "premiere_seance": "2008-06-09",
-      "derniere_seance": "2026-10-28",
-      "seances": 2397
+      "derniere_seance": "2026-10-29",
+      "seances": 2398
     },
     "NSBC.ci": {
       "premiere_seance": "2017-10-24",
-      "derniere_seance": "2026-10-28",
-      "seances": 2258
+      "derniere_seance": "2026-10-29",
+      "seances": 2259
     },
     "NTLC.ci": {
       "premiere_seance": "2008-01-08",
-      "derniere_seance": "2026-10-28",
-      "seances": 3250
+      "derniere_seance": "2026-10-29",
+      "seances": 3251
     },
     "ONTBF.bf": {
       "premiere_seance": "2009-04-30",
-      "derniere_seance": "2026-10-28",
-      "seances": 4040
+      "derniere_seance": "2026-10-29",
+      "seances": 4041
     },
     "ORAC.ci": {
       "premiere_seance": "2022-12-30",
-      "derniere_seance": "2026-10-28",
-      "seances": 995
+      "derniere_seance": "2026-10-29",
+      "seances": 996
     },
     "ORGT.tg": {
       "premiere_seance": "2019-04-16",
-      "derniere_seance": "2026-10-28",
-      "seances": 1820
+      "derniere_seance": "2026-10-29",
+      "seances": 1821
     },
     "PALC.ci": {
       "premiere_seance": "2014-07-11",
-      "derniere_seance": "2026-10-28",
-      "seances": 2983
+      "derniere_seance": "2026-10-29",
+      "seances": 2984
     },
     "PRSC.ci": {
       "premiere_seance": "2008-01-11",
-      "derniere_seance": "2026-10-28",
-      "seances": 2263
+      "derniere_seance": "2026-10-29",
+      "seances": 2264
     },
     "SAFC.ci": {
       "premiere_seance": "2018-07-19",
-      "derniere_seance": "2026-10-28",
-      "seances": 1465
+      "derniere_seance": "2026-10-29",
+      "seances": 1466
     },
     "SCRC.ci": {
       "premiere_seance": "2016-12-29",
-      "derniere_seance": "2026-10-28",
-      "seances": 2486
+      "derniere_seance": "2026-10-29",
+      "seances": 2487
     },
     "SDCC.ci": {
       "premiere_seance": "2008-01-02",
-      "derniere_seance": "2026-10-28",
-      "seances": 3779
+      "derniere_seance": "2026-10-29",
+      "seances": 3780
     },
     "SDSC.ci": {
       "premiere_seance": "2008-01-02",
-      "derniere_seance": "2026-10-28",
-      "seances": 3771
+      "derniere_seance": "2026-10-29",
+      "seances": 3772
     },
     "SEMC.ci": {
       "premiere_seance": "2025-11-07",
@@ -180,18 +180,18 @@
     },
     "SGBC.ci": {
       "premiere_seance": "2008-01-02",
-      "derniere_seance": "2026-10-28",
-      "seances": 4267
+      "derniere_seance": "2026-10-29",
+      "seances": 4268
     },
     "SHEC.ci": {
       "premiere_seance": "2008-01-02",
-      "derniere_seance": "2026-10-28",
-      "seances": 4085
+      "derniere_seance": "2026-10-29",
+      "seances": 4086
     },
     "SIBC.ci": {
       "premiere_seance": "2016-10-27",
-      "derniere_seance": "2026-10-28",
-      "seances": 2564
+      "derniere_seance": "2026-10-29",
+      "seances": 2565
     },
     "SICC.ci": {
       "premiere_seance": "2008-01-18",
@@ -200,63 +200,63 @@
     },
     "SIVC.ci": {
       "premiere_seance": "2008-01-02",
-      "derniere_seance": "2026-10-28",
-      "seances": 3861
+      "derniere_seance": "2026-10-29",
+      "seances": 3862
     },
     "SLBC.ci": {
       "premiere_seance": "2008-01-03",
-      "derniere_seance": "2026-10-28",
-      "seances": 2492
+      "derniere_seance": "2026-10-29",
+      "seances": 2493
     },
     "SMBC.ci": {
       "premiere_seance": "2008-01-03",
-      "derniere_seance": "2026-10-28",
-      "seances": 3240
+      "derniere_seance": "2026-10-29",
+      "seances": 3241
     },
     "SNTS.sn": {
       "premiere_seance": "2008-01-02",
-      "derniere_seance": "2026-10-28",
-      "seances": 4746
+      "derniere_seance": "2026-10-29",
+      "seances": 4747
     },
     "SOGC.ci": {
       "premiere_seance": "2008-01-04",
-      "derniere_seance": "2026-10-28",
-      "seances": 4225
+      "derniere_seance": "2026-10-29",
+      "seances": 4226
     },
     "SPHC.ci": {
       "premiere_seance": "2008-01-03",
-      "derniere_seance": "2026-10-28",
-      "seances": 4389
+      "derniere_seance": "2026-10-29",
+      "seances": 4390
     },
     "STAC.ci": {
       "premiere_seance": "2008-05-02",
-      "derniere_seance": "2026-10-28",
-      "seances": 2318
+      "derniere_seance": "2026-10-29",
+      "seances": 2319
     },
     "STBC.ci": {
       "premiere_seance": "2008-01-02",
-      "derniere_seance": "2026-10-28",
-      "seances": 3393
+      "derniere_seance": "2026-10-29",
+      "seances": 3394
     },
     "TTLC.ci": {
       "premiere_seance": "2008-01-03",
-      "derniere_seance": "2026-10-28",
-      "seances": 3764
+      "derniere_seance": "2026-10-29",
+      "seances": 3765
     },
     "TTLS.sn": {
       "premiere_seance": "2015-02-20",
-      "derniere_seance": "2026-10-28",
-      "seances": 2845
+      "derniere_seance": "2026-10-29",
+      "seances": 2846
     },
     "UNLC.ci": {
       "premiere_seance": "2010-08-09",
-      "derniere_seance": "2026-10-28",
-      "seances": 1855
+      "derniere_seance": "2026-10-29",
+      "seances": 1856
     },
     "UNXC.ci": {
       "premiere_seance": "2008-01-04",
-      "derniere_seance": "2026-10-28",
-      "seances": 3482
+      "derniere_seance": "2026-10-29",
+      "seances": 3483
     }
   },
   "indices": {
@@ -264,79 +264,79 @@
       "nom": "BRVM 30",
       "isin": "BRVM30000000",
       "premiere_seance": "2023-01-01",
-      "derniere_seance": "2026-10-28"
+      "derniere_seance": "2026-10-29"
     },
     "BRVMC": {
       "nom": "BRVM COMPOSITE",
       "isin": "BRVMC0000000",
       "premiere_seance": "2008-01-02",
-      "derniere_seance": "2026-10-28"
+      "derniere_seance": "2026-10-29"
     },
     "BRVMPA": {
       "nom": "BRVM - PRINCIPAL",
       "isin": "BRVM00000018",
       "premiere_seance": "2023-01-04",
-      "derniere_seance": "2026-10-28"
+      "derniere_seance": "2026-10-29"
     },
     "BRVMPR": {
       "nom": "BRVM - PRESTIGE",
       "isin": "BRVM00000017",
       "premiere_seance": "2023-01-01",
-      "derniere_seance": "2026-10-28"
+      "derniere_seance": "2026-10-29"
     },
     "BRVM_CB": {
       "nom": "BRVM - CONSOMMATION DE BASE",
       "isin": "BRVM00000019",
       "premiere_seance": "2025-01-02",
-      "derniere_seance": "2026-10-28"
+      "derniere_seance": "2026-10-29"
     },
     "BRVM_CD": {
       "nom": "BRVM - CONSOMMATION DISCRETIONNAIRE",
       "isin": "BRVM00000020",
       "premiere_seance": "2025-01-02",
-      "derniere_seance": "2026-10-28"
+      "derniere_seance": "2026-10-29"
     },
     "BRVM_EN": {
       "nom": "BRVM - ENERGIE",
       "isin": "BRVM00000021",
       "premiere_seance": "2025-01-02",
-      "derniere_seance": "2026-10-28"
+      "derniere_seance": "2026-10-29"
     },
     "BRVM_IN": {
       "nom": "BRVM - INDUSTRIELS",
       "isin": "BRVM00000022",
       "premiere_seance": "2025-01-02",
-      "derniere_seance": "2026-10-28"
+      "derniere_seance": "2026-10-29"
     },
     "BRVM_SF": {
       "nom": "BRVM - SERVICES FINANCIERS",
       "isin": "BRVM00000023",
       "premiere_seance": "2025-01-02",
-      "derniere_seance": "2026-10-28"
+      "derniere_seance": "2026-10-29"
     },
     "BRVM_TEL": {
       "nom": "BRVM - TELECOMMUNICATIONS",
       "isin": "BRVM00000025",
       "premiere_seance": "2025-01-02",
-      "derniere_seance": "2026-10-28"
+      "derniere_seance": "2026-10-29"
     },
     "CAPIBRVM": {
       "nom": "Capitalisation BRVM",
       "isin": "",
       "premiere_seance": "2020-01-02",
-      "derniere_seance": "2026-10-28"
+      "derniere_seance": "2026-10-29"
     },
     "SIKAIDX": {
       "nom": "INDICE SIKAFINANCE",
       "isin": "",
       "premiere_seance": "2017-01-02",
-      "derniere_seance": "2026-10-28"
+      "derniere_seance": "2026-10-29"
     },
     "SIKATR": {
       "nom": "SIKA TOTAL RETURN",
       "isin": "",
       "premiere_seance": "2019-03-31",
-      "derniere_seance": "2026-10-28"
+      "derniere_seance": "2026-10-29"
     }
   },
   "dividendes": {
