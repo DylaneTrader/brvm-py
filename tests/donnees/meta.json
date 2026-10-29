@@ -1,0 +1,48 @@
+{
+  "version_format": 1,
+  "exporte_le": "2026-10-29T13:55:40Z",
+  "releve_cours": "2026-10-28T21:24:48Z",
+  "derniere_seance": "2026-10-28",
+  "derniere_seance_close": true,
+  "taux_irvm_pct": {
+    "particulier": 12.0,
+    "institutionnel": 10.0
+  },
+  "operations_titres": [
+    {
+      "ticker": "SNTS.sn",
+      "date": "2026-10-26",
+      "rapport": 10,
+      "premiere_seance": "2026-10-26",
+      "source": "Fractionnement de l'action Sonatel par dix (nominal de 500 à 50 FCFA) : bulletin officiel de la cote du 17/09/2026, assemblée générale extraordinaire du 08/10/2026, effet le 26/10/2026."
+    }
+  ],
+  "actions": {
+    "ORAC.ci": {
+      "premiere_seance": "2022-12-30",
+      "derniere_seance": "2026-10-28",
+      "seances": 995
+    },
+    "SNTS.sn": {
+      "premiere_seance": "2008-01-02",
+      "derniere_seance": "2026-10-28",
+      "seances": 4746
+    }
+  },
+  "indices": {
+    "BRVMC": {
+      "nom": "BRVM COMPOSITE",
+      "isin": "BRVMC0000000",
+      "premiere_seance": "2008-01-02",
+      "derniere_seance": "2026-10-28"
+    }
+  },
+  "dividendes": {
+    "lignes": 332,
+    "retenus": 322
+  },
+  "sources": [
+    "https://www.sikafinance.com",
+    "https://www.brvm.org"
+  ]
+}

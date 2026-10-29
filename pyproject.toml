@@ -1,0 +1,39 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "brvm-py"
+version = "0.1.0"
+description = "Données de marché de la BRVM (UEMOA) : cours, indices, dividendes et sociétés, traités et mis à jour chaque jour de séance."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "NDOUDY-BAMOUENIZO Dylane Emmanuel Reyane" }]
+requires-python = ">=3.9"
+dependencies = ["pandas>=1.5"]
+keywords = ["brvm", "bourse", "uemoa", "afrique", "finance", "données de marché", "dividendes"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Intended Audience :: Science/Research",
+    "Natural Language :: French",
+    "Programming Language :: Python :: 3",
+    "Topic :: Office/Business :: Financial :: Investment",
+]
+
+[project.urls]
+Homepage = "https://github.com/DylaneTrader/brvm-py"
+Issues = "https://github.com/DylaneTrader/brvm-py/issues"
+
+[project.optional-dependencies]
+test = ["pytest>=7"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/brvm"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/brvm", "tests", "README.md", "LICENSE"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
