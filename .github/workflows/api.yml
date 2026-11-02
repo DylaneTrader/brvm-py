@@ -1,0 +1,48 @@
+name: API statique
+
+# Génère les fichiers JSON de l'API depuis la branche donnees et les publie sur GitHub Pages.
+# Réglage unique : Settings > Pages > Source : "GitHub Actions".
+
+on:
+  schedule:
+    # Du lundi au vendredi, après la clôture de la BRVM et la mise à jour des données.
+    - cron: "17 19 * * 1-5"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "src/brvm/**"
+      - ".github/workflows/api.yml"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          ref: donnees
+          path: donnees
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install .
+      - run: python -m brvm.api --donnees donnees --sortie site
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deployment
+        uses: actions/deploy-pages@v4

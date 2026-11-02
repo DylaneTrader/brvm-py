@@ -70,6 +70,36 @@ Toutes les fonctions rendent des `pandas.DataFrame`. Les codes s'écrivent comme
 - La dernière séance peut être provisoire si les cours ont été relevés avant la clôture :
   `brvm.infos()["derniere_seance_close"]`.
 
+## API web (JSON statique)
+
+Les mêmes données traitées sont publiées en JSON sur GitHub Pages, sans serveur ni clé :
+`https://dylanetrader.github.io/brvm-py/`. Elles sont régénérées chaque jour de séance, après la
+clôture, par le workflow `.github/workflows/api.yml`.
+
+```js
+fetch("https://dylanetrader.github.io/brvm-py/v1/cours/SNTS.sn.json")
+  .then(r => r.json())
+  .then(t => console.log(t.colonnes, t.lignes.at(-1)));
+```
+
+| Adresse | Contenu |
+|---|---|
+| `index.json` | liste des points d'accès, des codes et date de dernière séance |
+| `v1/infos.json`, `v1/tickers.json`, `v1/seances.json` | description de l'export, codes des actions, calendrier |
+| `v1/cours/{ticker}.json` | cours d'une action (ex. `SNTS.sn`) |
+| `v1/indices.json`, `v1/indices/{code}.json` | liste des indices, valeurs d'un indice (ex. `BRVMC`) |
+| `v1/dividendes.json`, `v1/dividendes/{ticker}.json` | dividendes, avec les montants nets des deux profils |
+| `v1/societes.json`, `v1/societes/{ticker}.json` | fiches des sociétés |
+| `v1/fondamentaux.json`, `v1/fondamentaux/{ticker}.json` | comptes par exercice |
+
+Les tables ont la forme `{"colonnes": [...], "lignes": [[...], ...]}`, avec des dates ISO et `null`
+pour les valeurs manquantes. Les adresses sont fixes : le filtrage par date se fait chez le client.
+Les en-têtes CORS de GitHub Pages permettent l'appel depuis un navigateur.
+
+Pour publier votre propre copie : activer GitHub Pages avec la source « GitHub Actions » dans les
+réglages du dépôt, puis lancer le workflow. Pour générer les fichiers en local :
+`python -m brvm.api --donnees chemin/vers/donnees --sortie site`.
+
 ## Cache et configuration
 
 Les fichiers sont téléchargés depuis la branche [`donnees`](https://github.com/DylaneTrader/brvm-py/tree/donnees)

@@ -112,3 +112,44 @@ def test_cache_puis_copie_hors_ligne(tmp_path, monkeypatch):
         src.lire("societes.csv")                        # jamais téléchargé
     src.vider()
     assert not any(tmp_path.iterdir())
+
+
+# ---------------------------------------------------------------------------
+# API statique
+# ---------------------------------------------------------------------------
+
+def test_api_statique(tmp_path):
+    import json
+
+    from brvm import api
+
+    fichiers = api.generer(tmp_path, str(DONNEES))
+    assert (tmp_path / "index.html").exists() and len(fichiers) > 10
+
+    def lire(chemin):
+        return json.loads((tmp_path / chemin).read_text(encoding="utf-8"))
+
+    index = lire("index.json")
+    assert index["tickers"] == ["ORAC.ci", "SNTS.sn"] and index["indices"] == ["BRVMC"]
+    assert index["derniere_seance"] == brvm.infos()["derniere_seance"]
+
+    # Cours : mêmes valeurs que la bibliothèque, dates ISO
+    t = lire("v1/cours/SNTS.sn.json")
+    ref = brvm.cours("SNTS")
+    assert t["colonnes"] == ["date", *ref.columns]
+    assert len(t["lignes"]) == len(ref)
+    assert t["lignes"][-1][0] == ref.index[-1].strftime("%Y-%m-%d")
+    assert t["lignes"][-1][t["colonnes"].index("cloture")] == ref["cloture"].iloc[-1]
+
+    # Indices, séances, dividendes, sociétés, fondamentaux
+    assert len(lire("v1/indices/BRVMC.json")["lignes"]) == len(brvm.indice("BRVMC"))
+    assert len(lire("v1/seances.json")) == len(brvm.seances())
+    div = lire("v1/dividendes.json")
+    assert "montant_net_fcfa" not in div["colonnes"] and "montant_net_particulier_fcfa" in div["colonnes"]
+    assert len(div["lignes"]) == len(brvm.dividendes())
+    assert lire("v1/societes/SNTS.sn.json")["nom"] == "SONATEL"
+    assert len(lire("v1/fondamentaux/ORAC.ci.json")["lignes"]) == len(brvm.fondamentaux("ORAC"))
+
+    # Pas de NaN : valeurs manquantes à null
+    for f in tmp_path.rglob("*.json"):
+        assert "NaN" not in f.read_text(encoding="utf-8")
