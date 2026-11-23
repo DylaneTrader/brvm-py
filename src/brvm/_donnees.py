@@ -1,4 +1,5 @@
-"""Lecture des données de marché de la BRVM : cours, indices, dividendes, sociétés, fondamentaux."""
+"""Lecture des données de marché de la BRVM : cours, indices, dividendes, sociétés, fondamentaux,
+rapports des sociétés et chiffres lus dans ces rapports."""
 
 from __future__ import annotations
 
@@ -13,6 +14,7 @@ from ._source import Source
 
 _source = Source()
 PROFILS = ("particulier", "institutionnel")
+PERIODES = ("A", "S1", "T1", "T3", "T4")
 CHAMPS = ("ouverture", "plus_haut", "plus_bas", "cloture", "volume_titres", "volume_fcfa", "variation_pct")
 
 
@@ -200,4 +202,79 @@ def fondamentaux(ticker: Optional[str] = None) -> pd.DataFrame:
     df["exercice"] = df["exercice"].astype(int)
     if ticker is not None:
         df = df[df["ticker"] == resoudre(ticker)]
+    return df.reset_index(drop=True)
+
+
+# ---------------------------------------------------------------------------
+# Rapports des sociétés
+# ---------------------------------------------------------------------------
+
+def _filtrer(df: pd.DataFrame, ticker, exercice, periode) -> pd.DataFrame:
+    if ticker is not None:
+        df = df[df["ticker"] == resoudre(ticker)]
+    if exercice is not None:
+        df = df[df["exercice"] == int(exercice)]
+    if periode is not None:
+        p = str(periode).upper()
+        if p not in PERIODES:
+            raise ValueError(f"brvm : période inconnue {periode!r}, choisir parmi {PERIODES}")
+        df = df[df["periode"] == p]
+    return df
+
+
+def rapports(ticker: Optional[str] = None, type: Optional[str] = None, exercice: Optional[int] = None,
+             periode: Optional[str] = None) -> pd.DataFrame:
+    """Catalogue des rapports publiés par les sociétés cotées sur brvm.org, un PDF par ligne.
+
+    Colonnes : ``ticker``, ``exercice``, ``periode`` (``A`` annuel, ``S1`` premier semestre, ``T1``,
+    ``T3``, ``T4`` trimestres), ``type`` (``etats_financiers``, ``rapport_activite``,
+    ``rapport_annuel``, ``rapport_semestriel``, ``rapport_cac``, ``rse``), ``statut`` (``audite``,
+    ``provisoire`` ou vide), ``date_publication``, ``titre``, ``nature`` du PDF lu (``texte`` ou
+    ``scan``, vide s'il n'a pas été lu), ``pages``, ``chiffres_lus`` (lignes de ``chiffres()`` qui en
+    viennent) et ``url`` du PDF.
+    """
+    df = _table("rapports.csv")
+    df["date_publication"] = pd.to_datetime(df["date_publication"])
+    df["exercice"] = df["exercice"].astype("Int64")
+    df["pages"] = df["pages"].astype("Int64")
+    df["statut"] = df["statut"].fillna("")
+    df = _filtrer(df, ticker, exercice, periode)
+    if type is not None:
+        df = df[df["type"] == type]
+    return df.reset_index(drop=True)
+
+
+def chiffres(ticker: Optional[str] = None, indicateur: Optional[str] = None, exercice: Optional[int] = None,
+             periode: Optional[str] = None, large: bool = False) -> pd.DataFrame:
+    """Chiffres lus dans les rapports des sociétés (états financiers, rapports d'activité), en
+    millions de FCFA, une ligne par société, exercice, période et indicateur.
+
+    Seules les lectures fiables sont publiées : contrôle ``concordant`` (comptes annuels égaux à 2 %
+    près à ceux de Sikafinance) ou ``non_controle`` (pas de référence), unité annoncée par le document
+    ou calée sur Sikafinance, aucun chiffre d'un document en écart, aucun montant sous 1 million de
+    FCFA ; quand plusieurs documents donnent le même chiffre, la lecture concordante l'emporte, puis
+    l'auditée, puis la plus récente, et un chiffre dont les lectures divergent est écarté.
+
+    Indicateurs : ``chiffre_affaires``, ``produit_net_bancaire``, ``resultat_net``,
+    ``resultat_avant_impot``, ``resultat_exploitation``, ``impot_resultat``, ``total_bilan``,
+    ``capitaux_propres``, ``depots_clientele``, ``credits_clientele``, ``cout_du_risque``, flux de
+    trésorerie… Les montants infra-annuels (``S1``, ``T1``, ``T3``) sont ceux publiés, en général
+    cumulés depuis le début de l'exercice. ``page``, ``libelle`` et ``url`` renvoient au document lu.
+
+    ``large=True`` : un tableau par société, exercice et période, une colonne par indicateur.
+    """
+    df = _table("chiffres_rapports.csv")
+    df["date_publication"] = pd.to_datetime(df["date_publication"])
+    df["exercice"] = df["exercice"].astype(int)
+    df["page"] = df["page"].astype("Int64")
+    df["statut"] = df["statut"].fillna("")
+    df = _filtrer(df, ticker, exercice, periode)
+    if indicateur is not None:
+        noms = [indicateur] if isinstance(indicateur, str) else list(indicateur)
+        df = df[df["indicateur"].isin(noms)]
+    if large:
+        df = df.pivot_table(index=["ticker", "exercice", "periode"], columns="indicateur", values="valeur_mfcfa",
+                            aggfunc="first")
+        df.columns.name = None
+        return df.reset_index()
     return df.reset_index(drop=True)

@@ -1,4 +1,5 @@
-"""Tests sur un extrait des données (tests/donnees : Sonatel, Orange CI, BRVMC depuis 2024)."""
+"""Tests sur un extrait des données (tests/donnees : Sonatel, Orange CI, BRVMC depuis 2024, rapports de ces
+deux sociétés)."""
 
 from __future__ import annotations
 
@@ -80,6 +81,33 @@ def test_societes_et_fondamentaux():
     assert "per_publie" not in f.columns and f["exercice"].is_monotonic_increasing
 
 
+def test_rapports():
+    r = brvm.rapports("SNTS")
+    assert (r["ticker"] == "SNTS.sn").all() and r["url"].str.startswith("https://www.brvm.org/").all()
+    assert pd.api.types.is_datetime64_any_dtype(r["date_publication"])
+    ef = brvm.rapports("snts", type="etats_financiers", exercice=2023)
+    assert len(ef) > 0 and (ef["type"] == "etats_financiers").all() and (ef["exercice"] == 2023).all()
+    assert len(brvm.rapports()) == len(r) + len(brvm.rapports("ORAC"))
+    with pytest.raises(ValueError):
+        brvm.rapports(periode="S2")
+
+
+def test_chiffres_fiables():
+    c = brvm.chiffres("SNTS")
+    assert set(c["controle"]) <= {"concordant", "non_controle"}
+    assert not c.duplicated(["ticker", "exercice", "periode", "indicateur"]).any()
+    assert (c["valeur_mfcfa"].abs() >= 1).all()
+    # chaque chiffre renvoie à un rapport du catalogue
+    assert set(c["url"]) <= set(brvm.rapports("SNTS")["url"])
+    # Sonatel 2023 : résultat net contrôlé contre Sikafinance
+    rn = brvm.chiffres("SNTS", indicateur="resultat_net", exercice=2023, periode="A").iloc[0]
+    assert rn["controle"] == "concordant" and rn["valeur_mfcfa"] == pytest.approx(331748, rel=1e-3)
+    large = brvm.chiffres("SNTS", periode="A", large=True)
+    ligne = large[large["exercice"] == 2023].iloc[0]
+    assert ligne["resultat_net"] == rn["valeur_mfcfa"]
+    assert len(large) == c[c["periode"] == "A"]["exercice"].nunique()
+
+
 def test_infos():
     m = brvm.infos()
     assert m["version_format"] == 1
@@ -149,6 +177,9 @@ def test_api_statique(tmp_path):
     assert len(div["lignes"]) == len(brvm.dividendes())
     assert lire("v1/societes/SNTS.sn.json")["nom"] == "SONATEL"
     assert len(lire("v1/fondamentaux/ORAC.ci.json")["lignes"]) == len(brvm.fondamentaux("ORAC"))
+    assert len(lire("v1/rapports/SNTS.sn.json")["lignes"]) == len(brvm.rapports("SNTS"))
+    assert len(lire("v1/chiffres.json")["lignes"]) == len(brvm.chiffres())
+    assert "chiffres_titre" in index["points_d_acces"]
 
     # Pas de NaN : valeurs manquantes à null
     for f in tmp_path.rglob("*.json"):
