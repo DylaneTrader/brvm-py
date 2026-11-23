@@ -6,8 +6,10 @@ des actions, indices, dividendes, fiches des sociétés et fondamentaux. Les don
 jour chaque jour de séance après la clôture.
 
 ```bash
-pip install git+https://github.com/DylaneTrader/brvm-py
+pip install brvm-py
 ```
+
+Version en développement : `pip install git+https://github.com/DylaneTrader/brvm-py`.
 
 ```python
 import brvm
