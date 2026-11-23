@@ -1,7 +1,8 @@
 # brvm-py
 
 Données de marché de la **Bourse Régionale des Valeurs Mobilières** (BRVM, UEMOA) en Python : cours
-des actions, indices, dividendes, fiches des sociétés et fondamentaux. Les données sont **traitées**
+des actions, indices, dividendes, fiches des sociétés, fondamentaux, rapports publiés par les sociétés
+et chiffres lus dans ces rapports. Les données sont **traitées**
 (divisions du nominal appliquées, dividendes ramenés au nominal des cours et contrôlés) et mises à
 jour chaque jour de séance après la clôture.
 
@@ -22,6 +23,8 @@ brvm.dividendes("ORAC")                    # dividendes, nets d'IRVM pour un par
 brvm.dividendes(profil="institutionnel", retenus=True)
 brvm.societes()                            # fiches des sociétés
 brvm.fondamentaux("SNTS")                  # comptes par exercice
+brvm.rapports("SNTS", type="etats_financiers")   # rapports publiés sur brvm.org, avec leurs liens
+brvm.chiffres("SNTS", periode="A", large=True)   # chiffres lus dans les rapports, une colonne par indicateur
 brvm.infos()                               # date de la dernière séance, divisions appliquées…
 ```
 
@@ -41,6 +44,8 @@ Toutes les fonctions rendent des `pandas.DataFrame`. Les codes s'écrivent comme
 | `dividendes(ticker, profil, retenus)` | dividendes passés et à venir, par action |
 | `societes()`, `societe(ticker)` | nom, ISIN, pays, secteur, titres, flottant, capitalisation, description |
 | `fondamentaux(ticker)` | chiffre d'affaires, résultat net, BNPA, dividende par exercice |
+| `rapports(ticker, type, exercice, periode)` | rapports publiés sur brvm.org (états financiers, rapports d'activité, annuels, semestriels, des commissaires aux comptes, RSE), avec le lien du PDF |
+| `chiffres(ticker, indicateur, exercice, periode, large)` | chiffres lus dans les rapports, en millions de FCFA, annuels, semestriels et trimestriels, avec la page et le lien du document |
 | `infos()` | description de l'export |
 
 ### Traitements
@@ -64,6 +69,30 @@ Toutes les fonctions rendent des `pandas.DataFrame`. Les codes s'écrivent comme
   pas retenu.
 - **Fondamentaux** : le PER publié par la source n'est pas fourni, car il est calculé au cours du
   jour de la collecte et n'a donc pas de date. Recalculez-le avec `cours()` et `bnpa_fcfa`.
+
+### Rapports des sociétés
+
+`rapports()` reprend le catalogue des PDF publiés par chaque société cotée sur brvm.org : type,
+exercice, période (`A` annuel, `S1` premier semestre, `T1`, `T3`, `T4` trimestres), statut (`audite`,
+`provisoire`), date de publication et lien.
+
+`chiffres()` donne les indicateurs lus dans les tableaux de ces PDF (chiffre d'affaires ou produit net
+bancaire, résultats, total du bilan, capitaux propres, dépôts et crédits de la clientèle, coût du
+risque, flux de trésorerie…), ramenés en millions de FCFA. Seules les lectures fiables sont publiées :
+
+- contrôle `concordant` (chiffre d'affaires ou résultat net annuel égal à 2 % près à celui de
+  Sikafinance) ou `non_controle` (pas de référence pour cet indicateur ou cette période) ; les
+  écarts, les colonnes supposées, les unités inconnues et les montants en dollars (Ecobank
+  Transnational) sont écartés ;
+- unité annoncée par le document ou calée sur Sikafinance ; une unité estimée par ordre de grandeur
+  est écartée, comme tout chiffre d'un document en écart et tout montant sous 1 million de FCFA ;
+- une valeur par société, exercice, période et indicateur : la lecture concordante l'emporte, puis
+  celle du document audité, puis la plus récente ; un chiffre dont les lectures divergent de plus de
+  1 % est écarté. `lectures` compte les documents qui le donnent.
+
+Les montants infra-annuels sont ceux publiés, en général cumulés depuis le début de l'exercice. Les
+chiffres viennent d'une lecture automatique : `page` et `url` permettent de vérifier chacun d'eux dans
+le PDF.
 
 ### Ce qu'il faut savoir sur la BRVM
 
@@ -93,6 +122,8 @@ fetch("https://dylanetrader.github.io/brvm-py/v1/cours/SNTS.sn.json")
 | `v1/dividendes.json`, `v1/dividendes/{ticker}.json` | dividendes, avec les montants nets des deux profils |
 | `v1/societes.json`, `v1/societes/{ticker}.json` | fiches des sociétés |
 | `v1/fondamentaux.json`, `v1/fondamentaux/{ticker}.json` | comptes par exercice |
+| `v1/rapports.json`, `v1/rapports/{ticker}.json` | catalogue des rapports des sociétés, avec les liens |
+| `v1/chiffres.json`, `v1/chiffres/{ticker}.json` | chiffres lus dans les rapports, en millions de FCFA |
 
 Les tables ont la forme `{"colonnes": [...], "lignes": [[...], ...]}`, avec des dates ISO et `null`
 pour les valeurs manquantes. Les adresses sont fixes : le filtrage par date se fait chez le client.
@@ -127,7 +158,7 @@ pd.read_csv("https://raw.githubusercontent.com/DylaneTrader/brvm-py/donnees/acti
 ## Sources et avertissement
 
 Les données sont collectées sur [Sikafinance](https://www.sikafinance.com) et
-[brvm.org](https://www.brvm.org) (avis de paiement des dividendes), puis traitées par
+[brvm.org](https://www.brvm.org) (avis de paiement des dividendes, rapports des sociétés), puis traitées par
 l'application BRVM Analytics. Elles sont fournies telles quelles, sans garantie d'exactitude ni
 d'exhaustivité, et ne constituent pas un conseil en investissement. Vérifiez auprès des
 publications officielles de la BRVM avant toute décision.

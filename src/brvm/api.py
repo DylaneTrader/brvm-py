@@ -90,6 +90,16 @@ def generer(sortie: str | Path, donnees: Optional[str] = None) -> list[Path]:
     for t, g in _par_titre(fond).items():
         ecrire(v1 / "fondamentaux" / f"{t}.json", _table(g, ticker=t))
 
+    rap = d.rapports()
+    ecrire(v1 / "rapports.json", _table(rap))
+    for t, g in _par_titre(rap).items():
+        ecrire(v1 / "rapports" / f"{t}.json", _table(g, ticker=t))
+
+    chf = d.chiffres()
+    ecrire(v1 / "chiffres.json", _table(chf))
+    for t, g in _par_titre(chf).items():
+        ecrire(v1 / "chiffres" / f"{t}.json", _table(g, ticker=t))
+
     points = {
         "infos": f"{VERSION_API}/infos.json",
         "tickers": f"{VERSION_API}/tickers.json",
@@ -103,6 +113,10 @@ def generer(sortie: str | Path, donnees: Optional[str] = None) -> list[Path]:
         "societe": f"{VERSION_API}/societes/{{ticker}}.json",
         "fondamentaux": f"{VERSION_API}/fondamentaux.json",
         "fondamentaux_titre": f"{VERSION_API}/fondamentaux/{{ticker}}.json",
+        "rapports": f"{VERSION_API}/rapports.json",
+        "rapports_titre": f"{VERSION_API}/rapports/{{ticker}}.json",
+        "chiffres": f"{VERSION_API}/chiffres.json",
+        "chiffres_titre": f"{VERSION_API}/chiffres/{{ticker}}.json",
     }
     ecrire(racine / "index.json", {
         "version": VERSION_API,
