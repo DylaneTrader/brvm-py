@@ -14,6 +14,10 @@ from ._source import Source
 
 _source = Source()
 PROFILS = ("particulier", "institutionnel")
+# Indices dont la composition se déduit des fiches : toute la cote (None) ou un secteur
+INDICES_COMPOSITION = {"BRVMC": None, "BRVM_CB": "Consommation De Base", "BRVM_CD": "Consommation Discretionnaire",
+                       "BRVM_EN": "Energie", "BRVM_IN": "Industriels", "BRVM_SF": "Services Financiers",
+                       "BRVM_TEL": "Telecommunications"}
 PERIODES = ("A", "S1", "T1", "T3", "T4")
 CHAMPS = ("ouverture", "plus_haut", "plus_bas", "cloture", "volume_titres", "volume_fcfa", "variation_pct")
 
@@ -203,6 +207,41 @@ def fondamentaux(ticker: Optional[str] = None) -> pd.DataFrame:
     if ticker is not None:
         df = df[df["ticker"] == resoudre(ticker)]
     return df.reset_index(drop=True)
+
+
+def composition(indice: str = "BRVMC", date=None, debut=None, fin=None):
+    """Poids de chaque action dans un indice, recalculés à chaque séance (somme à 1).
+
+    Poids = capitalisation du titre (dernier cours de clôture connu x nombre de titres, au nominal le
+    plus récent) / capitalisation de l'indice. ``indice`` : ``BRVMC`` (toute la cote) ou un indice
+    sectoriel (``BRVM_CB``, ``BRVM_CD``, ``BRVM_EN``, ``BRVM_IN``, ``BRVM_SF``, ``BRVM_TEL``), dont
+    les titres sont ceux du secteur de ``societes()``. Ces poids reproduisent les rendements publiés
+    de ces indices à moins d'un point de base près en médiane (``infos()["composition"]``). La
+    composition du BRVM 30 et du BRVM Prestige n'étant pas publiée dans les données, ils ne sont pas
+    pris en charge.
+
+    Sans ``date`` : DataFrame, une ligne par séance, une colonne par titre de l'indice (NaN avant sa
+    première cotation). Avec ``date`` : Series des poids à la dernière séance jusqu'à cette date
+    comprise, triée du plus lourd au plus léger.
+    """
+    c = str(indice or "").strip().upper().replace("-", "_").replace(" ", "_")
+    if c not in INDICES_COMPOSITION:
+        raise ValueError(f"brvm : composition non disponible pour {c}, choisir parmi {tuple(INDICES_COMPOSITION)}")
+    poids = _serie("composition.csv", debut, fin)
+    secteur = INDICES_COMPOSITION[c]
+    if secteur is not None:
+        s = societes()["secteur"]
+        membres = [t for t in poids.columns if s.get(t) == secteur]
+        poids = poids[membres]
+        poids = poids.div(poids.sum(axis=1), axis=0).dropna(how="all")
+    if date is None:
+        return poids
+    avant = poids.loc[:pd.Timestamp(date)]
+    if avant.empty:
+        raise KeyError(f"brvm : aucune séance de {c} jusqu'au {date}")
+    ligne = avant.iloc[-1].dropna().sort_values(ascending=False)
+    ligne.name = avant.index[-1]
+    return ligne
 
 
 # ---------------------------------------------------------------------------

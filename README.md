@@ -23,6 +23,7 @@ brvm.dividendes("ORAC")                    # dividendes, nets d'IRVM pour un par
 brvm.dividendes(profil="institutionnel", retenus=True)
 brvm.societes()                            # fiches des sociétés
 brvm.fondamentaux("SNTS")                  # comptes par exercice
+brvm.composition("BRVMC", date="2026-11-20")  # poids des titres dans l'indice à cette séance
 brvm.rapports("SNTS", type="etats_financiers")   # rapports publiés sur brvm.org, avec leurs liens
 brvm.chiffres("SNTS", periode="A", large=True)   # chiffres lus dans les rapports, une colonne par indicateur
 brvm.infos()                               # date de la dernière séance, divisions appliquées…
@@ -44,6 +45,7 @@ Toutes les fonctions rendent des `pandas.DataFrame`. Les codes s'écrivent comme
 | `dividendes(ticker, profil, retenus)` | dividendes passés et à venir, par action |
 | `societes()`, `societe(ticker)` | nom, ISIN, pays, secteur, titres, flottant, capitalisation, description |
 | `fondamentaux(ticker)` | chiffre d'affaires, résultat net, BNPA, dividende par exercice |
+| `composition(indice, date, debut, fin)` | poids de chaque action dans le BRVM Composite ou un indice sectoriel, à chaque séance |
 | `rapports(ticker, type, exercice, periode)` | rapports publiés sur brvm.org (états financiers, rapports d'activité, annuels, semestriels, des commissaires aux comptes, RSE), avec le lien du PDF |
 | `chiffres(ticker, indicateur, exercice, periode, large)` | chiffres lus dans les rapports, en millions de FCFA, annuels, semestriels et trimestriels, avec la page et le lien du document |
 | `infos()` | description de l'export |
@@ -69,6 +71,21 @@ Toutes les fonctions rendent des `pandas.DataFrame`. Les codes s'écrivent comme
   pas retenu.
 - **Fondamentaux** : le PER publié par la source n'est pas fourni, car il est calculé au cours du
   jour de la collecte et n'a donc pas de date. Recalculez-le avec `cours()` et `bnpa_fcfa`.
+
+### Composition des indices
+
+`composition()` donne le poids de chaque action dans un indice, recalculé à chaque séance : la
+capitalisation du titre (dernier cours de clôture connu multiplié par le nombre de titres, au nominal
+le plus récent) divisée par celle de l'indice. Pour le BRVM Composite (`BRVMC`), l'indice contient
+toute la cote ; pour un indice sectoriel (`BRVM_CB`, `BRVM_CD`, `BRVM_EN`, `BRVM_IN`, `BRVM_SF`,
+`BRVM_TEL`), les titres de son secteur dans `societes()`.
+
+Contrôle à chaque export, depuis 2024 : le rendement du jour recalculé avec les poids de la veille
+s'écarte du rendement publié de moins d'un point de base en médiane, pour chacun de ces indices, et
+la capitalisation reconstituée est à moins de 0,2 % de l'indice CAPIBRVM
+(`brvm.infos()["composition"]["controle"]`). Le nombre de titres est celui de la fiche actuelle : une
+augmentation de capital passée n'est pas reconstituée. Le BRVM 30 et le BRVM Prestige ne sont pas
+couverts, faute de liste de leurs membres.
 
 ### Rapports des sociétés
 
@@ -122,6 +139,7 @@ fetch("https://dylanetrader.github.io/brvm-py/v1/cours/SNTS.sn.json")
 | `v1/dividendes.json`, `v1/dividendes/{ticker}.json` | dividendes, avec les montants nets des deux profils |
 | `v1/societes.json`, `v1/societes/{ticker}.json` | fiches des sociétés |
 | `v1/fondamentaux.json`, `v1/fondamentaux/{ticker}.json` | comptes par exercice |
+| `v1/composition/{code}.json` | poids des titres dans un indice à chaque séance (ex. `BRVMC`) |
 | `v1/rapports.json`, `v1/rapports/{ticker}.json` | catalogue des rapports des sociétés, avec les liens |
 | `v1/chiffres.json`, `v1/chiffres/{ticker}.json` | chiffres lus dans les rapports, en millions de FCFA |
 

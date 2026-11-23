@@ -81,6 +81,22 @@ def test_societes_et_fondamentaux():
     assert "per_publie" not in f.columns and f["exercice"].is_monotonic_increasing
 
 
+def test_composition():
+    p = brvm.composition()
+    assert list(p.columns) == ["ORAC.ci", "SNTS.sn"] and isinstance(p.index, pd.DatetimeIndex)
+    assert ((p.sum(axis=1) - 1).abs() < 1e-6).all()
+    # indice sectoriel : titres du secteur de societes(), renormalisés
+    tel = brvm.composition("brvm_tel", debut="2025-01-01")
+    assert tel.index.min() >= pd.Timestamp("2025-01-01") and ((tel.sum(axis=1) - 1).abs() < 1e-6).all()
+    jour = brvm.composition(date="2026-10-28")
+    assert jour.name == pd.Timestamp("2026-10-28") and jour.is_monotonic_decreasing
+    assert jour.sum() == pytest.approx(1)
+    with pytest.raises(ValueError):
+        brvm.composition("BRVM30")
+    with pytest.raises(KeyError):
+        brvm.composition(date="2000-01-01")
+
+
 def test_rapports():
     r = brvm.rapports("SNTS")
     assert (r["ticker"] == "SNTS.sn").all() and r["url"].str.startswith("https://www.brvm.org/").all()
@@ -180,6 +196,7 @@ def test_api_statique(tmp_path):
     assert len(lire("v1/rapports/SNTS.sn.json")["lignes"]) == len(brvm.rapports("SNTS"))
     assert len(lire("v1/chiffres.json")["lignes"]) == len(brvm.chiffres())
     assert "chiffres_titre" in index["points_d_acces"]
+    assert len(lire("v1/composition/BRVMC.json")["lignes"]) == len(brvm.composition())
 
     # Pas de NaN : valeurs manquantes à null
     for f in tmp_path.rglob("*.json"):
