@@ -27,6 +27,11 @@ brvm.composition("BRVMC", date="2026-11-20")  # poids des titres dans l'indice �
 brvm.rapports("SNTS", type="etats_financiers")   # rapports publiés sur brvm.org, avec leurs liens
 brvm.chiffres("SNTS", periode="A", large=True)   # chiffres lus dans les rapports, une colonne par indicateur
 brvm.infos()                               # date de la dernière séance, divisions appliquées…
+
+brvm.mesures.performances()                # rendements de toutes les actions, de la semaine à 10 ans
+brvm.mesures.beta("ORAC")                  # bêta d'Orange CI face au BRVM Composite
+brvm.mesures.valorisation(date="2025-12-31")   # PER, P/B, rendement au cours de cette date
+brvm.mesures.regime()                      # régime de marché du BRVM Composite
 ```
 
 Toutes les fonctions rendent des `pandas.DataFrame`. Les codes s'écrivent comme on veut : `snts`,
@@ -117,6 +122,68 @@ le PDF.
 - La variation d'un titre est limitée à ±7,5 % par séance.
 - La dernière séance peut être provisoire si les cours ont été relevés avant la clôture :
   `brvm.infos()["derniere_seance_close"]`.
+
+## Mesures de marché (`brvm.mesures`)
+
+Le module `brvm.mesures` calcule, à partir des mêmes données, les mesures de l'application BRVM
+Analytics, avec ses conventions : un chiffre obtenu ici est celui de l'application. Les rendements sont
+des fractions (`0.05` = 5 %) ; la participation et le Fear & Greed vont de 0 à 100.
+
+| Fonction | Contenu |
+|---|---|
+| `rendement_total(ticker, debut, fin, profil)` | valeur en base 100, dividendes nets d'IRVM réinvestis au détachement ; pour le BRVM Composite et les indices sectoriels, dividendes de leurs titres pondérés par `composition()` |
+| `performances(tickers, fin, dividendes, annualise, profil)` | rendement de chaque titre sur la semaine, le mois, le trimestre et l'année en cours, puis sur 1 semaine, 1, 3 et 6 mois, 1, 3, 5 et 10 ans |
+| `rendements_annuels(tickers, depuis, fin, dividendes, profil)` | rendement par année civile ; l'année d'introduction est signalée comme partielle |
+| `rendements_mensuels(ticker, dividendes, profil)`, `saisonnalite(ticker, ...)` | rendements mois par mois ; moyenne, médiane et part des années en hausse pour chaque mois |
+| `volatilite(ticker, debut, fin, frequence, fenetre)` | volatilité annualisée, hebdomadaire par défaut, glissante avec `fenetre` |
+| `perte_maximale(ticker, debut, fin, dividendes)` | plus forte baisse depuis un sommet, dates du sommet, du creux et de la reprise, durées |
+| `var(ticker, niveau, debut, fin, frequence)` | VaR et CVaR historiques d'une semaine (ou d'une séance) |
+| `beta(ticker, reference, debut, fin, frequence, taux_sans_risque, fenetre)` | bêta, intervalle à 95 %, R², alpha, volatilité propre, lecture ; glissant avec `fenetre` |
+| `valorisation(ticker, date)` | capitalisation, PER, P/B, ROE, P/CA, VE/EBE et rendement du dividende au cours d'une date, avec les seuls comptes connus à cette date |
+| `ratios(ticker)` | comptes annuels et ratios : croissances, marges, ROE, ROA, endettement ; coefficient d'exploitation et coût du risque pour une banque |
+| `regime(indice, debut, fin, mm_moyen, mm_long, bande, confirmation)` | régime de chaque séance parmi six, de « Strong Bull » à « Strong Bear » |
+| `participation(n, debut, fin)` | part des actions au-dessus de leur moyenne mobile 200 séances |
+| `fear_greed(lisse, debut, fin)` | Fear & Greed BRVM : score, zone, trois piliers et cinq composantes |
+
+```python
+from brvm import mesures
+
+mesures.rendement_total("SNTS", debut="2020-01-01")    # 100 investis en 2020, dividendes réinvestis
+mesures.performances(["SNTS", "ORAC", "BRVMC"], dividendes=True)
+mesures.volatilite("SGBC", frequence="J", fenetre=60)   # volatilité quotidienne glissante sur 60 séances
+mesures.perte_maximale("ORAC", debut="2024-01-01")
+mesures.beta("SNTS", reference="BRVM_TEL")             # face à l'indice de son secteur
+mesures.valorisation(date="2024-06-28")                # toute la cote au 28 juin 2024
+mesures.regime().attrs                                 # régime actuel, date d'entrée, séances depuis
+mesures.fear_greed().tail()
+```
+
+**Ce que chaque mesure suppose**
+
+- **Prix à chaque séance** : un titre qui n'échange pas garde son dernier cours ; rien avant la
+  première cotation. Les cours sont au nominal le plus récent (divisions appliquées).
+- **Dividendes réinvestis** : seuls les dividendes `retenus` sont crédités, nets d'IRVM pour le
+  `profil` choisi (particulier par défaut), au cours de la veille du détachement.
+- **Risque** : rendements hebdomadaires par défaut (de vendredi à vendredi), annualisés par racine de
+  52 ; `frequence="J"` passe en quotidien (racine de 252), où un jour sans échange compte pour un
+  rendement nul. Le bêta régresse les rendements en excès du taux sans risque (3 % par défaut) et
+  n'est publié qu'à partir de 26 semaines ou 60 séances communes.
+- **Valorisation datée** : un exercice est connu à la date de publication de son premier rapport
+  annuel sur brvm.org ; à défaut, au plus tard du 1er juillet N+1 et du détachement du dividende N
+  (1er octobre N+1 sans dividende daté). Résultat net et chiffre d'affaires viennent de Sikafinance
+  d'abord, les autres postes des chiffres fiables de `chiffres()`. Un multiple au dénominateur
+  négatif ou hors de bornes plausibles n'est pas publié. Le nombre de titres est celui de la fiche
+  actuelle.
+- **Régime** : prix, moyenne 50 et moyenne 200 comparés deux à deux, chaque bascule demandant un
+  écart de 1 % tenu 3 séances.
+- **Fear & Greed** : cinq composantes classées en rang percentile sur 756 séances, regroupées en trois
+  piliers à poids égaux (tendance, participation, flux et stress), score lissé sur 10 séances.
+
+Chaque mesure dit sur quoi elle repose : les fonctions qui rendent un dictionnaire donnent `debut`,
+`fin` et le nombre d'observations `n` ; les tableaux le disent dans `.attrs`. Un chiffre qui repose
+sur peu de séances (titre peu liquide, introduction récente) se voit tout de suite.
+
+Ces mesures décrivent le passé et ne constituent pas un conseil en investissement.
 
 ## API web (JSON statique)
 
