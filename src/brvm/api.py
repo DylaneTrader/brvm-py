@@ -90,6 +90,10 @@ def generer(sortie: str | Path, donnees: Optional[str] = None) -> list[Path]:
     for t, g in _par_titre(fond).items():
         ecrire(v1 / "fondamentaux" / f"{t}.json", _table(g, ticker=t))
 
+    for c in d.INDICES_COMPOSITION:
+        if c in codes_indices:
+            ecrire(v1 / "composition" / f"{c}.json", _table(d.composition(c).reset_index(), code=c))
+
     rap = d.rapports()
     ecrire(v1 / "rapports.json", _table(rap))
     for t, g in _par_titre(rap).items():
@@ -113,6 +117,7 @@ def generer(sortie: str | Path, donnees: Optional[str] = None) -> list[Path]:
         "societe": f"{VERSION_API}/societes/{{ticker}}.json",
         "fondamentaux": f"{VERSION_API}/fondamentaux.json",
         "fondamentaux_titre": f"{VERSION_API}/fondamentaux/{{ticker}}.json",
+        "composition": f"{VERSION_API}/composition/{{code}}.json",
         "rapports": f"{VERSION_API}/rapports.json",
         "rapports_titre": f"{VERSION_API}/rapports/{{ticker}}.json",
         "chiffres": f"{VERSION_API}/chiffres.json",

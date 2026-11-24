@@ -7,12 +7,14 @@
     brvm.dividendes("ORAC")      # dividendes d'Orange CI, nets d'IRVM
     brvm.societes()              # fiches des sociétés cotées
     brvm.fondamentaux("SNTS")    # comptes par exercice
+    brvm.composition("BRVMC")    # poids des titres dans un indice, à chaque séance
     brvm.rapports("SNTS")        # rapports publiés sur brvm.org, avec leurs liens
     brvm.chiffres("SNTS")        # chiffres lus dans ces rapports (lignes fiables)
 """
 
 from ._donnees import (
     chiffres,
+    composition,
     configurer,
     cours,
     dividendes,
@@ -33,6 +35,6 @@ from ._donnees import (
 __version__ = "0.1.0"
 
 __all__ = [
-    "chiffres", "configurer", "cours", "dividendes", "fondamentaux", "indice", "indices", "infos", "panneau",
+    "chiffres", "composition", "configurer", "cours", "dividendes", "fondamentaux", "indice", "indices", "infos", "panneau",
     "rapports", "resoudre", "seances", "societe", "societes", "tickers", "vider_cache",
 ]
